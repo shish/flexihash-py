@@ -5,6 +5,26 @@ from flexihash import Flexihash, Flexihash_Exception
 
 class TestFlexihash(unittest2.TestCase):
 
+    def testLookupThrowsExceptionOnEmpty(self):
+        hashSpace = Flexihash()
+        self.assertRaises(Flexihash_Exception, hashSpace.lookup, 'test')
+
+    def testLookupListThrowsExceptionOnZero(self):
+        hashSpace = Flexihash()
+        self.assertRaises(Flexihash_Exception, hashSpace.lookupList, 'test', 0)
+
+    def testLookupListReturnsWithShortListIfAllTargetsUsed(self):
+        hashSpace = Flexihash()
+        # both have CRC32 of 1253617450
+        hashSpace.addTarget("x").addTarget("y")     # make the list non-empty, non-one-value, to avoid shortcuts
+        hashSpace.addTarget("80726")                # add a value
+        hashSpace.addTarget("14746907")             # add a different value with the same hash, to clobber the first
+        hashSpace.removeTarget("14746907")          # remove the fourth value; with the third clobbered, only X and Y are left
+        result = hashSpace.lookupList('test', 3)    # try to get 3 results, our target list is X, Y, 80726
+        self.assertEqual(len(result), 2)            # but 80726 isn't reachable since it was clobbered
+        self.assertIn("x", result)                  # all that's left is x
+        self.assertIn("y", result)                  # and y
+
     def testGetAllTargetsEmpty(self):
         hashSpace = Flexihash()
         self.assertEqual(hashSpace.getAllTargets(), [])

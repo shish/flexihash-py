@@ -62,8 +62,8 @@ class Flexihash(object):
         if not self.positionToTarget:
             return []
 
-        #if this.targetCount == 1:
-        #    return array_unique(array_values(this.positionToTarget))
+        if self.targetCount == 1:
+            return [self.positionToTarget.values()[0], ]
 
         resourcePosition = self.hasher.hash(resource)
 

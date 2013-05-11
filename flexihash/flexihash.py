@@ -1,9 +1,11 @@
-from .crc32 import Flexihash_Crc32Hasher
+from .crc32 import Crc32Hasher
+from .exc import Flexihash_Exception
 
-class Flexihash():
+
+class Flexihash(object):
     def __init__(self, hasher=None, replicas=None):
         self.replicas = replicas or 64
-        self.hasher = hasher or Flexihash_Crc32Hasher()
+        self.hasher = hasher or Crc32Hasher()
         self.targetCount = 0
         self.positionToTarget = {}
         self.targetToPositions = {}
@@ -23,9 +25,13 @@ class Flexihash():
         self.pisitionToTargetSorted = False
         self.targetCount = self.targetCount + 1
 
+        return self
+
     def addTargets(self, targets):
         for target in targets:
             self.addTarget(target)
+
+        return self
 
     def removeTarget(self, target):
         if target not in self.targetToPositions:
@@ -37,6 +43,8 @@ class Flexihash():
         del self.targetToPositions[target]
 
         self.targetCount = self.targetCount - 1
+
+        return self
 
     def getAllTargets(self):
         return self.targetToPositions.keys()

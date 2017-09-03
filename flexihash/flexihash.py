@@ -1,5 +1,28 @@
-from .crc32 import Crc32Hasher
-from .exc import Flexihash_Exception
+import zlib
+import hashlib
+
+
+class FlexihashException(Exception):
+    pass
+
+
+class Hasher(object):
+    def hash(self, value):
+        raise NotImplementedError()
+
+
+class Md5Hasher(Hasher):
+    def hash(self, value):
+        if hasattr(value, 'encode'):
+            value = value.encode()
+        return hashlib.md5(value).hexdigest()
+
+
+class Crc32Hasher(Hasher):
+    def hash(self, value):
+        if hasattr(value, 'encode'):
+            value = value.encode()
+        return zlib.crc32(value)
 
 
 class Flexihash(object):
@@ -13,7 +36,7 @@ class Flexihash(object):
 
     def addTarget(self, target, weight=1):
         if target in self.targetToPositions:
-            raise Flexihash_Exception("Target '%s' already exists" % target)
+            raise FlexihashException("Target '%s' already exists" % target)
 
         self.targetToPositions[target] = []
 
@@ -22,7 +45,7 @@ class Flexihash(object):
             self.positionToTarget[position] = target
             self.targetToPositions[target].append(position)
 
-        self.pisitionToTargetSorted = False
+        self.positionToTargetSorted = False
         self.targetCount = self.targetCount + 1
 
         return self
@@ -35,7 +58,7 @@ class Flexihash(object):
 
     def removeTarget(self, target):
         if target not in self.targetToPositions:
-            raise Flexihash_Exception("Target '%s' does not exist" % target)
+            raise FlexihashException("Target '%s' does not exist" % target)
 
         for position in self.targetToPositions[target]:
             del self.positionToTarget[position]
@@ -47,23 +70,23 @@ class Flexihash(object):
         return self
 
     def getAllTargets(self):
-        return self.targetToPositions.keys()
+        return list(self.targetToPositions.keys())
 
     def lookup(self, resource):
         targets = self.lookupList(resource, 1)
         if not targets:
-            raise Flexihash_Exception("No targets exist")
+            raise FlexihashException("No targets exist")
         return targets[0]
 
     def lookupList(self, resource, requestedCount):
         if not requestedCount:
-            raise Flexihash_Exception("Invalid count requested")
+            raise FlexihashException("Invalid count requested")
 
         if not self.positionToTarget:
             return []
 
         if self.targetCount == 1:
-            return [self.positionToTarget.values()[0], ]
+            return [list(self.positionToTarget.values())[0], ]
 
         resourcePosition = self.hasher.hash(resource)
 
@@ -91,10 +114,10 @@ class Flexihash(object):
 
         return results
 
-    #def __str__(self):
+    # def __str__(self):
 
     def sortPositionTargets(self):
         if not self.positionToTargetSorted:
-            #sort(self.positionToTargetSorted)
+            # sort(self.positionToTargetSorted)
             self.positionToTargetSorted = True
 

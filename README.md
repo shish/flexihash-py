@@ -8,7 +8,9 @@ Usage Example
 -------------
 
 <pre>
-hash = new Flexihash()
+import flexihash
+
+hash = flexihash.Flexihash()
 
 # bulk add
 hash.addTargets(['cache-1', 'cache-2', 'cache-3'])

@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='Flexihash',
-      version='1.0',
+      version='1.1',
       description='Python port of PHP Flexihash',
       author='Shish',
       author_email='webmaster@shishnet.org',

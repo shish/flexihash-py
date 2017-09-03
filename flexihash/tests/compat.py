@@ -1,9 +1,9 @@
-import unittest2
+import unittest
 
 from flexihash import Flexihash
 
 
-class TestCompat(unittest2.TestCase):
+class TestCompatibility(unittest.TestCase):
     """
     Make sure that this version gives the same
     results for the same input as the original

@@ -1,17 +1,17 @@
-import unittest2
+import unittest
 
-from flexihash import Flexihash, Flexihash_Exception
+from flexihash import Flexihash, FlexihashException, Hasher
 
 
-class TestFlexihash(unittest2.TestCase):
+class TestFlexihash(unittest.TestCase):
 
     def testLookupThrowsExceptionOnEmpty(self):
         hashSpace = Flexihash()
-        self.assertRaises(Flexihash_Exception, hashSpace.lookup, 'test')
+        self.assertRaises(FlexihashException, hashSpace.lookup, 'test')
 
     def testLookupListThrowsExceptionOnZero(self):
         hashSpace = Flexihash()
-        self.assertRaises(Flexihash_Exception, hashSpace.lookupList, 'test', 0)
+        self.assertRaises(FlexihashException, hashSpace.lookupList, 'test', 0)
 
     def testLookupListReturnsWithShortListIfAllTargetsUsed(self):
         hashSpace = Flexihash()
@@ -32,7 +32,7 @@ class TestFlexihash(unittest2.TestCase):
     def testAddTargetThrowsExceptionOnDuplicateTarget(self):
         hashSpace = Flexihash()
         hashSpace.addTarget('t-a')
-        self.assertRaises(Flexihash_Exception, hashSpace.addTarget, 't-a')
+        self.assertRaises(FlexihashException, hashSpace.addTarget, 't-a')
 
     def testAddTargetAndGetAllTargets(self):
         hashSpace = Flexihash()
@@ -62,18 +62,18 @@ class TestFlexihash(unittest2.TestCase):
 
     def testRemoveTargetFailsOnMissingTarget(self):
         hashSpace = Flexihash()
-        self.assertRaises(Flexihash_Exception, hashSpace.removeTarget, 'not-there')
+        self.assertRaises(FlexihashException, hashSpace.removeTarget, 'not-there')
 
     def testHashSpaceRepeatableLookups(self):
         hashSpace = Flexihash()
-        for i in range(1,10):
+        for i in range(1, 10):
             hashSpace.addTarget("target" + str(i))
 
         self.assertEqual(hashSpace.lookup('t1'), hashSpace.lookup('t1'))
         self.assertEqual(hashSpace.lookup('t2'), hashSpace.lookup('t2'))
 
     def testHashSpaceLookupsAreValidTargets(self):
-        targets = ["target"+str(i) for i in range(1, 10)]
+        targets = ["target" + str(i) for i in range(1, 10)]
 
         hashSpace = Flexihash()
         hashSpace.addTargets(targets)
@@ -83,11 +83,11 @@ class TestFlexihash(unittest2.TestCase):
 
     def testHashSpaceConsistentLookupsAfterAddingAndRemoving(self):
         hashSpace = Flexihash()
-        for i in range(1,10):
+        for i in range(1, 10):
             hashSpace.addTarget("target" + str(i))
 
         results1 = []
-        for i in range(1,100):
+        for i in range(1, 100):
             results1.append(hashSpace.lookup("t"+str(i)))
 
         hashSpace \
@@ -97,7 +97,7 @@ class TestFlexihash(unittest2.TestCase):
             .removeTarget('new-target')
 
         results2 = []
-        for i in range(1,100):
+        for i in range(1, 100):
             results2.append(hashSpace.lookup("t"+str(i)))
 
         # This is probably optimistic, as adding/removing a target may
@@ -106,26 +106,26 @@ class TestFlexihash(unittest2.TestCase):
 
     def testHashSpaceConsistentLookupsWithNewInstance(self):
         hashSpace1 = Flexihash()
-        for i in range(1,10):
+        for i in range(1, 10):
             hashSpace1.addTarget("target" + str(i))
 
         results1 = []
-        for i in range(1,100):
+        for i in range(1, 100):
             results1.append(hashSpace1.lookup("t"+str(i)))
 
         hashSpace2 = Flexihash()
-        for i in range(1,10):
+        for i in range(1, 10):
             hashSpace2.addTarget("target" + str(i))
 
         results2 = []
-        for i in range(1,100):
+        for i in range(1, 100):
             results2.append(hashSpace2.lookup("t"+str(i)))
 
         self.assertEqual(results1, results2)
 
     def testGetMultipleTargets(self):
         hashSpace = Flexihash()
-        for i in range(1,10):
+        for i in range(1, 10):
             hashSpace.addTarget("target" + str(i))
 
         targets = hashSpace.lookupList('resource', 2)
@@ -252,9 +252,13 @@ class TestFlexihash(unittest2.TestCase):
             ['t1']
         )
 
-class MockHasher(object):  # Hasher):
-    def setHashValue(self, hash):
-        self._hashValue = hash
+
+class MockHasher(Hasher):
+    def __init__(self):
+        self._hashValue = None
+
+    def setHashValue(self, h):
+        self._hashValue = h
 
     def hash(self, value):
         return self._hashValue

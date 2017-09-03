@@ -70,7 +70,7 @@ class Flexihash(object):
         return self
 
     def getAllTargets(self):
-        return list(self.targetToPositions.keys())
+        return sorted(list(self.targetToPositions.keys()))
 
     def lookup(self, resource):
         targets = self.lookupList(resource, 1)

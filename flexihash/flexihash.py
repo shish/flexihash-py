@@ -31,8 +31,8 @@ class Flexihash(object):
         self.hasher = hasher or Crc32Hasher()
         self.targetCount = 0
         self.positionToTarget = {}
+        self.positionToTargetSorted = []
         self.targetToPositions = {}
-        self.positionToTargetSorted = False
 
     def addTarget(self, target, weight=1):
         if target in self.targetToPositions:
@@ -45,7 +45,7 @@ class Flexihash(object):
             self.positionToTarget[position] = target
             self.targetToPositions[target].append(position)
 
-        self.positionToTargetSorted = False
+        self.positionToTargetSorted = []
         self.targetCount = self.targetCount + 1
 
         return self
@@ -65,6 +65,7 @@ class Flexihash(object):
 
         del self.targetToPositions[target]
 
+        self.positionToTargetSorted = []
         self.targetCount = self.targetCount - 1
 
         return self
@@ -95,7 +96,7 @@ class Flexihash(object):
 
         self.sortPositionTargets()
 
-        for key, value in sorted(self.positionToTarget.items()):
+        for key, value in self.positionToTargetSorted:
             if not collect and key > resourcePosition:
                 collect = True
 
@@ -105,7 +106,7 @@ class Flexihash(object):
             if len(results) == requestedCount or len(results) == self.targetCount:
                 return results
 
-        for key, value in sorted(self.positionToTarget.items()):
+        for key, value in self.positionToTargetSorted:
             if value not in results:
                 results.append(value)
 
@@ -118,6 +119,5 @@ class Flexihash(object):
 
     def sortPositionTargets(self):
         if not self.positionToTargetSorted:
-            # sort(self.positionToTargetSorted)
-            self.positionToTargetSorted = True
+            self.positionToTargetSorted = sorted(self.positionToTarget.items())
 

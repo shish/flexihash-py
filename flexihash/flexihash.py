@@ -97,7 +97,7 @@ class Flexihash(object):
 
         self.sortPositionTargets()
 
-        offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, None))
+        offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, ''))
 
         for key, value in self.positionToTargetSorted[offset:]:
             if not collect and key > resourcePosition:

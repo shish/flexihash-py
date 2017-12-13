@@ -1,5 +1,6 @@
 import zlib
 import hashlib
+import bisect
 
 
 class FlexihashException(Exception):
@@ -96,7 +97,9 @@ class Flexihash(object):
 
         self.sortPositionTargets()
 
-        for key, value in self.positionToTargetSorted:
+        offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, None))
+
+        for key, value in self.positionToTargetSorted[offset:]:
             if not collect and key > resourcePosition:
                 collect = True
 

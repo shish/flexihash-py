@@ -14,14 +14,14 @@ class Hasher(object):
 
 class Md5Hasher(Hasher):
     def hash(self, value):
-        if hasattr(value, 'encode'):
+        if hasattr(value, "encode"):
             value = value.encode()
         return hashlib.md5(value).hexdigest()
 
 
 class Crc32Hasher(Hasher):
     def hash(self, value):
-        if hasattr(value, 'encode'):
+        if hasattr(value, "encode"):
             value = value.encode()
         return zlib.crc32(value)
 
@@ -88,7 +88,9 @@ class Flexihash(object):
             return []
 
         if self.targetCount == 1:
-            return [list(self.positionToTarget.values())[0], ]
+            return [
+                list(self.positionToTarget.values())[0],
+            ]
 
         resourcePosition = self.hasher.hash(resource)
 
@@ -97,7 +99,7 @@ class Flexihash(object):
 
         self.sortPositionTargets()
 
-        offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, ''))
+        offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, ""))
 
         for key, value in self.positionToTargetSorted[offset:]:
             if not collect and key > resourcePosition:
@@ -123,4 +125,3 @@ class Flexihash(object):
     def sortPositionTargets(self):
         if not self.positionToTargetSorted:
             self.positionToTargetSorted = sorted(self.positionToTarget.items())
-

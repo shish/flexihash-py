@@ -8,6 +8,7 @@ class TestCompatibility(unittest.TestCase):
     Make sure that this version gives the same
     results for the same input as the original
     """
+
     def test_basic(self):
         fh = Flexihash()
 

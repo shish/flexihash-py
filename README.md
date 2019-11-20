@@ -7,7 +7,7 @@ A python port of https://github.com/pda/flexihash , aiming for 1:1 compatibility
 Usage Example
 -------------
 
-<pre>
+```
 import flexihash
 
 hash = flexihash.Flexihash()
@@ -30,4 +30,4 @@ hash.lookupList('object', 2)  # ["cache-2", "cache-4"]
 # remove cache-2, expect object to hash to cache-4
 hash.removeTarget('cache-2')
 hash.lookup('object')  # "cache-4"
-</pre>
+```

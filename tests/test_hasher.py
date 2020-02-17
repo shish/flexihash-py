@@ -1,9 +1,14 @@
 import unittest
 
-from flexihash import Crc32Hasher, Md5Hasher
+from flexihash import Crc32Hasher, Md5Hasher, Hasher
 
 
 class HasherTest(unittest.TestCase):
+    def test_BaseHahser(self):
+        hasher = Hasher()
+        with self.assertRaises(NotImplementedError):
+            hasher.hash("test")
+
     def test_Crc32Hash(self):
         hasher = Crc32Hasher()
         result1 = hasher.hash("test")

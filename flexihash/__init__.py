@@ -30,7 +30,6 @@ class Flexihash(object):
     def __init__(self, hasher=None, replicas=None):
         self.replicas = replicas or 64
         self.hasher = hasher or Crc32Hasher()
-        self.targetCount = 0
         self.positionToTarget = {}
         self.positionToTargetSorted = []
         self.targetToPositions = {}
@@ -47,7 +46,6 @@ class Flexihash(object):
             self.targetToPositions[target].append(position)
 
         self.positionToTargetSorted = []
-        self.targetCount = self.targetCount + 1
 
         return self
 
@@ -67,7 +65,6 @@ class Flexihash(object):
         del self.targetToPositions[target]
 
         self.positionToTargetSorted = []
-        self.targetCount = self.targetCount - 1
 
         return self
 
@@ -84,38 +81,25 @@ class Flexihash(object):
         if not requestedCount:
             raise FlexihashException("Invalid count requested")
 
-        if not self.positionToTarget:
+        if len(self.targetToPositions) == 0:
             return []
 
-        if self.targetCount == 1:
-            return [
-                list(self.positionToTarget.values())[0],
-            ]
+        if len(self.targetToPositions) == 1:
+            return [list(self.positionToTarget.values())[0]]
 
         resourcePosition = self.hasher.hash(resource)
 
         results = []
-        collect = False
 
         self.sortPositionTargets()
 
         offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, ""))
 
-        for key, value in self.positionToTargetSorted[offset:]:
-            if not collect and key > resourcePosition:
-                collect = True
-
-            if collect and value not in results:
-                results.append(value)
-
-            if len(results) == requestedCount or len(results) == self.targetCount:
-                return results
-
-        for key, value in self.positionToTargetSorted:
+        for key, value in self.positionToTargetSorted[offset:] + self.positionToTargetSorted[:offset]:
             if value not in results:
                 results.append(value)
 
-            if len(results) == requestedCount or len(results) == self.targetCount:
+            if len(results) == requestedCount or len(results) == len(self.targetToPositions):
                 return results
 
         return results

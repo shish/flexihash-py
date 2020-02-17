@@ -95,11 +95,15 @@ class Flexihash(object):
 
         offset = bisect.bisect_left(self.positionToTargetSorted, (resourcePosition, ""))
 
-        for key, value in self.positionToTargetSorted[offset:] + self.positionToTargetSorted[:offset]:
+        for key, value in (
+            self.positionToTargetSorted[offset:] + self.positionToTargetSorted[:offset]
+        ):
             if value not in results:
                 results.append(value)
 
-            if len(results) == requestedCount or len(results) == len(self.targetToPositions):
+            if len(results) == requestedCount or len(results) == len(
+                self.targetToPositions
+            ):
                 return results
 
         return results

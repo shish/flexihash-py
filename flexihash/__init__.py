@@ -1,3 +1,7 @@
+"""
+python implementation of Flexihash; all the stuff
+in one .py file because it's pretty short
+"""
 import zlib
 import hashlib
 import bisect

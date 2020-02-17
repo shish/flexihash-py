@@ -105,7 +105,7 @@ class Flexihash(object):
         n_targets = len(self.targetToPositions)
 
         results = []
-        for key, value in ptts[offset:] + ptts[:offset]:
+        for _, value in ptts[offset:] + ptts[:offset]:
             if value not in results:
                 results.append(value)
 

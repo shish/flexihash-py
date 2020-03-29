@@ -14,6 +14,6 @@ setup(
     long_description_content_type="text/markdown",
     author="Shish",
     author_email="webmaster@shishnet.org",
-    url="http://github.com/shish/python-flexihash",
+    url="http://github.com/shish/flexihash-py",
     packages=["flexihash"],
 )

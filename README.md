@@ -1,6 +1,8 @@
 flexihash-py
 ============
 
+![Unit Tests](https://github.com/shish/flexihash-py/workflows/Unit%20Tests/badge.svg)
+
 A python port of https://github.com/pda/flexihash , aiming for 1:1 compatibility
 
 

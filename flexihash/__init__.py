@@ -105,7 +105,7 @@ class Flexihash(object):
         n_targets = len(self.targetToPositions)
 
         results = []
-        for _, value in ptts[offset:] + ptts[:offset]:
+        for _, value in self.offsetIterator(ptts, offset):
             if value not in results:
                 results.append(value)
 
@@ -113,6 +113,11 @@ class Flexihash(object):
                 return results
 
         return results
+
+    def offsetIterator(self, lst, offset):
+        l = len(lst)
+        for n in range(l):
+            yield lst[(n + offset) % l]
 
     def sortPositionTargets(self) -> List[Tuple[Position, Target]]:
         if not self.positionToTargetSorted:

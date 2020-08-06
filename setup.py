@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="Flexihash",
-    version="1.5",
+    version="1.5.1",
     description="Python port of PHP Flexihash",
     long_description=long_description,
     long_description_content_type="text/markdown",
